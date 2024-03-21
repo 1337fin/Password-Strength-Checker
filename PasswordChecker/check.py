@@ -1,5 +1,9 @@
 import re
 
+# Author: fin702106
+# Date: 21/03/2024
+# File: ~/PasswordChecker/check.py
+
 class PasswordChecker:
     
     def __init__(self, password):
