@@ -1,12 +1,9 @@
 import re
 
-from PasswordChecker.commonPasswords import commonPasswords
-
 class PasswordChecker:
     
     def __init__(self, password):
         self.symbolPattern = r'[!@#$%^&*()\-_=+[\]{};:\'",.<>?£]'
-        self.commonPasswords = commonPasswords()
         self.password = password
         self.points = 0
 
@@ -16,41 +13,52 @@ class PasswordChecker:
         if not self.password:
             print("Password is empty.")
             return False
-        if self.password in self.commonPasswords:
-            print("Password found in database of common passwords.")
-            return False
-        elif len(self.password) < 6:
+        elif len(self.password) < 8:
             print("Password is too short.")
             return False
         elif len(self.password) > 15:
             print("Password is too long.")
             return False
 
+        for letter in self.password:
+            if letter == letter.upper():
+                self.points += 5
+            if letter == letter.lower():
+                self.points += 5
+        
+        numeric_count = sum(1 for char in self.password if char.isdigit())
+        self.points += numeric_count * 10
+
+        if self.password == self.password.lower():
+            for i in self.password: 
+                self.points -= 3
+
+        if self.password == self.password.upper():
+            for i in self.password:
+                self.points -= 3
+
         if bool(re.search(self.symbolPattern, self.password)):
             self.points += 2
             matches = re.findall(self.symbolPattern, self.password)
-            if len(matches) > 1:
-                self.points += 3
+            self.points += len(matches) * 10
         else:
             self.points = self.points
-
-        if len(self.password) >= 6 and len(self.password) <= 15:
-            self.points += 1
-
-        if self.password not in self.commonPasswords:
-            self.points += 1
         
         return self.ratePassword()
 
     def ratePassword(self) -> bool:
         """Returns a rating for the password"""
 
-        if self.points <= 3:
-            status = "weak"
-        elif self.points > 6:
-            status = "strong"
+        if self.points <= 20:
+            status = "very low"
+        elif 21 <= self.points <= 40:
+            status = "low"
+        elif 41 <= self.points <= 70:
+            status = "medium"
+        elif 71 <= self.points <= 80:
+            status = "high"
         else:
-            status = "moderate"
+            status = "very high"
 
         print(f"Your password '{self.password}' is {status} with a rating of {self.points} points")
         return True
