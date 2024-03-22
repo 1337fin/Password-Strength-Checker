@@ -1,6 +1,6 @@
 from PasswordChecker import PasswordChecker
 
-# Author: fin702106
+# Author: 1337fin
 # Date: 21/03/2024
 # File: ~/PasswordChecker/main.py
 
